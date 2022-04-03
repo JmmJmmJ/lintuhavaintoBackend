@@ -23,17 +23,10 @@ havainnotRouter.delete("/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-const generateId = () => {
-  min = Math.ceil(10);
-  max = Math.floor(10000);
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
 havainnotRouter.post("/", (request, response, next) => {
   const body = request.body;
 
   const havainto = new Havainto({
-    id: generateId(),
     laji: body.laji,
     paikka: body.paikka,
     paiva: body.paiva,
