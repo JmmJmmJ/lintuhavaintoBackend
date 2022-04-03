@@ -6,7 +6,7 @@ console.log("connecting to", url);
 const havaintoSchema = new mongoose.Schema({
   laji: { type: String, required: true },
   paikka: String,
-  paiva: { type: String, required: true },
+  paiva: { type: Date, required: true },
   aika: String,
   maara: String,
   kommentit: String,
