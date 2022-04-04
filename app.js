@@ -3,6 +3,7 @@ const express = require("express");
 require("express-async-errors");
 const app = express();
 const cors = require("cors");
+const loginRouter = require("./controllers/login");
 const havainnotRouter = require("./controllers/havainnot");
 const usersRouter = require("./controllers/users");
 const middleware = require("./utils/middleware");
@@ -23,6 +24,7 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
+app.use("/api/login", loginRouter);
 app.use("/api/havainnot", havainnotRouter);
 app.use("/api/users", usersRouter);
 

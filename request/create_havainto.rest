@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/havainnot
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFiYyIsImlkIjoiNjI0YWUyMWI3MWMxOGU4OTJlOTExZGI3IiwiaWF0IjoxNjQ5MDc2MzIzfQ._VwTPF1beFGm_kyy0pmzPnGJ2O1RqiEWKncGXa6KUmM
 
   {
-    "laji": "Harakka",
+    "laji": "Varis",
     "paikka": "Alajärvi",
     "paiva": "2022/3/30",
     "aika": "16:05",
