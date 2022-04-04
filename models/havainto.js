@@ -10,6 +10,7 @@ const havaintoSchema = new mongoose.Schema({
   aika: String,
   maara: String,
   kommentit: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 havaintoSchema.set("toJSON", {

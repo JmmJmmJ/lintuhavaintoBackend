@@ -1,10 +1,13 @@
 const havainnotRouter = require("express").Router();
 const Havainto = require("../models/havainto");
+const User = require("../models/user");
 
-havainnotRouter.get("/", (req, res) => {
-  Havainto.find({}).then((result) => {
-    res.json(result);
+havainnotRouter.get("/", async (req, res) => {
+  const havainnot = await Havainto.find({}).populate("user", {
+    username: 1,
+    name: 1,
   });
+  res.json(havainnot);
 });
 
 havainnotRouter.get("/:id", (req, res, next) => {
@@ -23,8 +26,10 @@ havainnotRouter.delete("/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-havainnotRouter.post("/", (request, response, next) => {
+havainnotRouter.post("/", async (request, response, next) => {
   const body = request.body;
+
+  const user = await User.findById(body.userId);
 
   const havainto = new Havainto({
     laji: body.laji,
@@ -33,14 +38,14 @@ havainnotRouter.post("/", (request, response, next) => {
     aika: body.aika,
     maara: body.maara,
     kommentit: body.kommentti,
+    user: user._id,
   });
 
-  havainto
-    .save()
-    .then((savedHavainto) => {
-      response.json(savedHavainto);
-    })
-    .catch((error) => next(error));
+  const savedHavainto = await havainto.save();
+  user.havainnot = user.havainnot.concat(savedHavainto._id);
+  await user.save();
+
+  response.status(201).json(savedHavainto);
 });
 
 havainnotRouter.put("/:id", (request, response, next) => {

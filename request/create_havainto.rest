@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/havainnot
+Content-Type: application/json
+
+  {
+    "laji": "Harakka",
+    "paikka": "Alajärvi",
+    "paiva": "2022/3/30",
+    "aika": "16:05",
+    "maara": 4,
+    "kommentit": "Lumi sadetta",
+    "userId": "624ae21b71c18e892e911db7"
+  }
