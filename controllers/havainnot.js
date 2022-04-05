@@ -17,20 +17,19 @@ havainnotRouter.get("/", async (req, res) => {
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: "token missing or invalid" });
   }
-  console.log(decodedToken.id);
-  const users = await User.findOne({ id: decodedToken.id }).populate(
-    "havainnot",
-    {
-      laji: 1,
-      paikka: 1,
-      paiva: 1,
-      aika: 1,
-      maara: 1,
-      kommentit: 1,
-    }
-  );
 
-  res.json(users.havainnot);
+  const user = await User.findById(decodedToken.id);
+
+  const userPopulated = await user.populate("havainnot", {
+    laji: 1,
+    paikka: 1,
+    paiva: 1,
+    aika: 1,
+    maara: 1,
+    kommentit: 1,
+  });
+  console.log(userPopulated.havainnot);
+  res.json(userPopulated.havainnot);
 });
 
 havainnotRouter.delete("/:id", async (request, response, next) => {
