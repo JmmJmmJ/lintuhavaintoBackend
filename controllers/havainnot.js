@@ -12,27 +12,43 @@ const getTokenFrom = (request) => {
 };
 
 havainnotRouter.get("/", async (req, res) => {
-  const havainnot = await Havainto.find({}).populate("user", {
-    username: 1,
-    name: 1,
-  });
-  res.json(havainnot);
+  const token = getTokenFrom(req);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
+  console.log(decodedToken.id);
+  const users = await User.findOne({ id: decodedToken.id }).populate(
+    "havainnot",
+    {
+      laji: 1,
+      paikka: 1,
+      paiva: 1,
+      aika: 1,
+      maara: 1,
+      kommentit: 1,
+    }
+  );
+
+  res.json(users.havainnot);
 });
 
-havainnotRouter.get("/:id", (req, res, next) => {
-  Havainto.findById(req.params.id)
-    .then((havainto) => {
-      res.json(havainto);
-    })
-    .catch((error) => next(error));
-});
+havainnotRouter.delete("/:id", async (request, response, next) => {
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
 
-havainnotRouter.delete("/:id", (request, response, next) => {
-  Havainto.findByIdAndRemove(request.params.id)
-    .then((result) => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+  havaintoToRemove = await Havainto.findById(request.params.id);
+
+  if (decodedToken.id === havaintoToRemove.user._id.toString()) {
+    await Havainto.findByIdAndRemove(request.params.id);
+  } else {
+    return response.status(404).json({ error: "havainto not found" });
+  }
+
+  response.status(204).end();
 });
 
 havainnotRouter.post("/", async (request, response, next) => {
@@ -61,25 +77,35 @@ havainnotRouter.post("/", async (request, response, next) => {
   response.status(201).json(savedHavainto);
 });
 
-havainnotRouter.put("/:id", (request, response, next) => {
-  const { laji, paikka, paiva, aika, maara, kommentit } = request.body;
+havainnotRouter.put("/:id", async (request, response, next) => {
+  const token = getTokenFrom(request);
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
 
-  Havainto.findByIdAndUpdate(
-    request.params.id,
-    {
-      laji,
-      paikka,
-      paiva,
-      aika,
-      maara,
-      kommentit,
-    },
-    { new: true, runValidators: true, context: "query" }
-  )
-    .then((updatedHavainto) => {
-      response.json(updatedHavainto);
-    })
-    .catch((error) => next(error));
+  havaintoToUpdate = await Havainto.findById(request.params.id);
+
+  if (decodedToken.id === havaintoToUpdate.user._id.toString()) {
+    const { laji, paikka, paiva, aika, maara, kommentit } = request.body;
+
+    const updatedHavainto = await Havainto.findByIdAndUpdate(
+      request.params.id,
+      {
+        laji,
+        paikka,
+        paiva,
+        aika,
+        maara,
+        kommentit,
+      },
+      { new: true, runValidators: true, context: "query" }
+    );
+
+    response.json(updatedHavainto);
+  } else {
+    return response.status(404).json({ error: "havainto not found" });
+  }
 });
 
 module.exports = havainnotRouter;

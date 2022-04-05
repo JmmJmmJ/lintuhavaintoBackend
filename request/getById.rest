@@ -1,1 +1,0 @@
-GET http://localhost:3001/api/havainnot/624818ad549e1416bae23fb7
