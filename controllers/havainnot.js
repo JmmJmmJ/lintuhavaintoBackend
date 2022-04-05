@@ -28,7 +28,6 @@ havainnotRouter.get("/", async (req, res) => {
     maara: 1,
     kommentit: 1,
   });
-  console.log(userPopulated.havainnot);
   res.json(userPopulated.havainnot);
 });
 
