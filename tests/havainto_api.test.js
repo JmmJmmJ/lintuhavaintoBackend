@@ -93,6 +93,39 @@ describe("when there is havainto", () => {
 
     expect(response.body).toHaveLength(1);
   });
+
+  test("Havainto can be edited", async () => {
+    const havaintoAtStart = (await helper.havainnotInDb())[0];
+    const editedHavainto = {
+      ...havaintoAtStart,
+      laji: "Harakka",
+    };
+
+    await api
+      .put(`/api/havainnot/${havaintoAtStart.id}`)
+      .send(editedHavainto)
+      .set("Authorization", `bearer ${token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const havainnotAtEnd = await helper.havainnotInDb();
+    const havaintoAtEnd = havainnotAtEnd.find(
+      (b) => b.id === havaintoAtStart.id
+    );
+    expect(havaintoAtEnd.laji).toBe("Harakka");
+  });
+
+  test("Havainto can be deleted", async () => {
+    const havaintoAtStart = (await helper.havainnotInDb())[0];
+
+    await api
+      .delete(`/api/havainnot/${havaintoAtStart.id}`)
+      .set("Authorization", `bearer ${token}`)
+      .expect(204);
+
+    const havainnotAtEnd = await helper.havainnotInDb();
+    expect(havainnotAtEnd).toHaveLength(0);
+  });
 });
 
 describe("user creation", () => {
