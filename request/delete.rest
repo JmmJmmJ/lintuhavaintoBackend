@@ -1,2 +1,0 @@
-DELETE http://localhost:3003/api/havainnot/624bff042c0613359b7ef9bb
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFiYyIsImlkIjoiNjI0YmY2ZjRkYmU0OTZhODgwNWUzZTQ2IiwiaWF0IjoxNjQ5MTQ1NjE5fQ.ReWWV4h5OwcfWzekvgW6oA-NMrlTtRP4fF9AiFZdAfE
